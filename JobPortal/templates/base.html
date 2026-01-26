@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Portal{% endblock %}</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Static CSS -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <!-- Logo -->
+        <div class="logo">Job<span>Portal</span></div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+            <button type="button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Toggle -->
+        <input type="checkbox" id="click">
+        <label for="click" class="menu-btn">
+            <i class="fas fa-bars"></i>
+        </label>
+
+        <!-- Menu -->
+        <ul>
+            <li><a href="{% url 'home' %}" class="active">Home</a></li>
+
+
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a class="get-started" href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li><a class="get-started" href="{% url 'login' %}">Login</a></li>
+            <li><a class="get-started" href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+
+        </ul>
+
+
+    </nav>
+
+    {% if messages %}
+    <section class="flash-stack">
+        {% for message in messages %}
+        <div class="flash-message {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+</html>
