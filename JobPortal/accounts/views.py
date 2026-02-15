@@ -1,11 +1,14 @@
-from django.shortcuts import  render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile , RecruiterProfile, JobSeekerProfile 
-from .forms import RegistrationForm 
+from .forms import RegistrationForm , UpdateUserProfileForm , UpdateJobSeekerProfileForm , UpdateRecruiterProfileForm
 from django.contrib import messages
+from jobs.models import Job
+from applications.models import Application
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -53,6 +56,99 @@ def home(request):
         'jobseeker_cards': jobseeker_cards,
         }
     return render(request, 'home.html', context)
+
+
+@login_required(login_url='login')
+def view_jobseeker_profile(request, profile_id):
+    try:
+        viewer_profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        messages.error(request, 'Profile record does not exist for this account.')
+        auth_logout(request)
+        return redirect('login')
+
+    if viewer_profile.role != 'recruiter':
+        messages.error(request, 'Only recruiters can view jobseeker profiles.')
+        return redirect('home')
+
+    jobseeker_user_profile = get_object_or_404(
+        UserProfile.objects.select_related('user').filter(role='jobseeker'),
+        pk=profile_id,
+    )
+    jobseeker_profile, _ = JobSeekerProfile.objects.get_or_create(user=jobseeker_user_profile)
+
+    full_name = " ".join(
+        value for value in [
+            jobseeker_user_profile.first_name,
+            jobseeker_user_profile.middle_name,
+            jobseeker_user_profile.last_name,
+        ]
+        if value
+    ).strip()
+    if not full_name:
+        full_name = jobseeker_user_profile.user.username
+
+    location_parts = [
+        jobseeker_user_profile.city,
+        jobseeker_user_profile.state,
+        jobseeker_user_profile.country,
+    ]
+    location = ", ".join(part for part in location_parts if part) or "Not provided"
+
+    context = {
+        'jobseeker_user_profile': jobseeker_user_profile,
+        'jobseeker_profile': jobseeker_profile,
+        'full_name': full_name,
+        'location': location,
+    }
+    return render(request, 'jobseeker_profile_detail.html', context)
+
+@login_required(login_url='login')
+def dashboard(request):
+    try:
+        user_profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        messages.error(request, "Profile record does not exist for this account.")
+        return redirect('home')
+    if user_profile.role == 'recruiter':
+
+        recruiter_profile, _ = RecruiterProfile.objects.get_or_create(
+            user_profile=user_profile
+        )
+
+        my_jobs = Job.objects.filter(
+            recruiter=recruiter_profile
+        ).order_by('-created_at')
+
+        job_post_count = my_jobs.count()
+        application_count = Application.objects.filter(recruiter=recruiter_profile).count()
+
+        context = {
+            'user_profile': user_profile,
+            'recruiter_profile': recruiter_profile,
+            'my_jobs': my_jobs,
+            'job_post_count': job_post_count,
+            'application_count': application_count,
+            'profile_view_count': 0,
+            'message_count': 0,
+        }
+
+        return render(request, 'dashboard_Recruiter.html', context)
+
+    elif user_profile.role == 'jobseeker':
+
+        jobseeker_profile, _ = JobSeekerProfile.objects.get_or_create(
+            user=user_profile
+        )
+
+        context = {
+            'user_profile': user_profile,
+            'jobseeker_profile': jobseeker_profile,
+        }
+
+        return render(request, 'dashboard_JobSeeker.html', context)
+    messages.error(request, "Invalid role for dashboard.")
+    return redirect('home')
 
 def register(request):
     if request.method == 'POST':
@@ -155,3 +251,65 @@ def logout(request):
     auth_logout(request)
     return redirect('index')
 
+@login_required(login_url='login')
+def update_profile(request):
+    try:
+        user_profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        messages.error(request, 'Profile record does not exist for this account.')
+        return redirect('home')
+    jobseeker_form = None
+    recruiter_form = None
+
+    if request.method == 'POST':
+        user_form = UpdateUserProfileForm(request.POST, instance=user_profile)
+
+        if user_profile.role == 'jobseeker':
+            jobseeker_profile, _ = JobSeekerProfile.objects.get_or_create(user=user_profile)
+            jobseeker_form = UpdateJobSeekerProfileForm(
+                request.POST,
+                request.FILES,
+                instance=jobseeker_profile,
+            )
+            if user_form.is_valid() and jobseeker_form.is_valid():
+                user_form.save()
+                jobseeker_form.save()
+                messages.success(request, 'Profile updated successfully.')
+                return redirect('home')
+        elif user_profile.role == 'recruiter':
+            recruiter_profile, _ = RecruiterProfile.objects.get_or_create(user_profile=user_profile)
+            recruiter_form = UpdateRecruiterProfileForm(
+                request.POST,
+                request.FILES,
+                instance=recruiter_profile,
+            )
+            if user_form.is_valid() and recruiter_form.is_valid():
+                user_form.save()
+                recruiter_form.save()
+                messages.success(request, 'Profile updated successfully.')
+                return redirect('home')
+        else:
+            messages.error(request, 'Invalid role for profile update.')
+            return redirect('home')
+    else:
+        user_form = UpdateUserProfileForm(instance=user_profile)
+
+        if user_profile.role == 'jobseeker':
+            jobseeker_profile, _ = JobSeekerProfile.objects.get_or_create(user=user_profile)
+            jobseeker_form = UpdateJobSeekerProfileForm(instance=jobseeker_profile)
+        elif user_profile.role == 'recruiter':
+            recruiter_profile, _ = RecruiterProfile.objects.get_or_create(user_profile=user_profile)
+            recruiter_form = UpdateRecruiterProfileForm(instance=recruiter_profile)
+        else:
+            messages.error(request, 'Invalid role for profile update.')
+            return redirect('home')
+
+    return render(
+        request,
+        'update_profile.html',
+        {
+            'user_form': user_form,
+            'jobseeker_form': jobseeker_form,
+            'recruiter_form': recruiter_form,
+        },
+    )
