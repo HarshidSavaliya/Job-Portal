@@ -1,57 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+{% block content %}
 
-<body>
+<section class="hero">
+    <div class="hero-content">
+        <h2>Easiest way to find your <span>dream job</span></h2>
+        <p>Find jobs that match your skills and career goals.</p>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Easiest way to find your <span>dream job</span></h2>
-            <p>Find jobs that match your skills and career goals.</p>
-
-            <div class="stats">
-                <div class="stat-item">
-                    <h3>500+</h3>
-                    <p>Companies</p>
-                </div>
-                <div class="stat-item">
-                    <h3>10K+</h3>
-                    <p>Users</p>
-                </div>
-                <div class="stat-item">
-                    <h3>2K+</h3>
-                    <p>Jobs</p>
-                </div>
+        <div class="stats">
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Companies</p>
+            </div>
+            <div class="stat-item">
+                <h3>10K+</h3>
+                <p>Users</p>
+            </div>
+            <div class="stat-item">
+                <h3>2K+</h3>
+                <p>Jobs</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="features">
-        <h3>Why Choose Us?</h3>
+<section class="features">
+    <h3>Why Choose Us?</h3>
 
-        <div class="feature-cards">
-            <div class="card">
-                <h4>Fast & Easy</h4>
-                <p>Apply to jobs quickly.</p>
-            </div>
-
-            <div class="card">
-                <h4>Verified Recruiters</h4>
-                <p>Only trusted companies.</p>
-            </div>
-
-            <div class="card">
-                <h4>Career Growth</h4>
-                <p>Better opportunities.</p>
-            </div>
+    <div class="feature-cards">
+        <div class="card">
+            <h4>Fast & Easy</h4>
+            <p>Apply to jobs quickly.</p>
         </div>
-    </section>
 
-</body>
+        <div class="card">
+            <h4>Verified Recruiters</h4>
+            <p>Only trusted companies.</p>
+        </div>
 
-</html>
+        <div class="card">
+            <h4>Career Growth</h4>
+            <p>Better opportunities.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
