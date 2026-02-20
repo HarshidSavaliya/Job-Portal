@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Post Job</title>
+
+    <!-- Bootstrap (optional but recommended) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background:#f5f6fa;">
+
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h3 class="mb-4 text-center">{{ form_title|default:"Post a Job" }}</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Show Form Errors -->
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label>Job Title</label>
+                    <input type="text" name="title" id="id_title" class="form-control"
+                        value="{{ form.title.value|default_if_none:'' }}" required>
+                    {% if form.title.errors %}
+                    <div class="text-danger small mt-1">{{ form.title.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Job Type</label>
+                    <select name="job_type" id="id_job_type" class="form-control" required>
+                        {% for choice_value, choice_label in form.fields.job_type.choices %}
+                        <option value="{{ choice_value }}" {% if form.job_type.value == choice_value %}selected{% endif %}>
+                            {{ choice_label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.job_type.errors %}
+                    <div class="text-danger small mt-1">{{ form.job_type.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Job Category</label>
+                    {{ form.job_category }}
+                    {% if form.job_category.errors %}
+                    <div class="text-danger small mt-1">{{ form.job_category.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Job Description</label>
+                    <textarea name="job_description" id="id_job_description" class="form-control" rows="4"
+                        required>{{ form.job_description.value|default_if_none:'' }}</textarea>
+                    {% if form.job_description.errors %}
+                    <div class="text-danger small mt-1">{{ form.job_description.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Company</label>
+                    <input type="text" name="company" id="id_company" class="form-control"
+                        value="{{ form.company.value|default_if_none:'' }}" required>
+                    {% if form.company.errors %}
+                    <div class="text-danger small mt-1">{{ form.company.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Location</label>
+                    <input type="text" name="location" id="id_location" class="form-control"
+                        value="{{ form.location.value|default_if_none:'' }}" required>
+                    {% if form.location.errors %}
+                    <div class="text-danger small mt-1">{{ form.location.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Salary</label>
+                    <input type="number" step="0.01" min="0" name="salary" id="id_salary" class="form-control"
+                        value="{{ form.salary.value|default_if_none:'' }}" required>
+                    {% if form.salary.errors %}
+                    <div class="text-danger small mt-1">{{ form.salary.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Education Requirements</label>
+                    <textarea name="education_requirements" id="id_education_requirements" class="form-control"
+                        rows="3" required>{{ form.education_requirements.value|default_if_none:'' }}</textarea>
+                    {% if form.education_requirements.errors %}
+                    <div class="text-danger small mt-1">{{ form.education_requirements.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Experience Requirements</label>
+                    <textarea name="experience_requirements" id="id_experience_requirements" class="form-control"
+                        rows="3" required>{{ form.experience_requirements.value|default_if_none:'' }}</textarea>
+                    {% if form.experience_requirements.errors %}
+                    <div class="text-danger small mt-1">{{ form.experience_requirements.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label>Skills Required</label>
+                    <textarea name="skills_required" id="id_skills_required" class="form-control" rows="3"
+                        required>{{ form.skills_required.value|default_if_none:'' }}</textarea>
+                    {% if form.skills_required.errors %}
+                    <div class="text-danger small mt-1">{{ form.skills_required.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    {{ submit_label|default:"Post Job" }}
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
