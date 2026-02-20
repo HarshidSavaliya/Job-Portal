@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+
+        <!-- Quick Actions -->
+        <div class="quick-section">
+            <h3>Quick Actions</h3>
+            <ul>
+                <li><a href="{% url 'update_profile' %}"><i class="fas fa-user-edit"></i> Update Profile</a></li>
+                <li><a href="#"><i class="fas fa-file-upload"></i> Edit Applications</a></li>
+                <li><a href="#"><i class="fas fa-bookmark"></i> View Applications</a></li>
+                <li><a href="#"><i class="fas fa-bell"></i> Job Alerts</a></li>
+            </ul>
+        </div>
+
+    </aside>
+    >
+
+</main>
+
+{% endblock %}
