@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Jobseeker Profile - {{ full_name }}{% endblock %}
+
+{% block content %}
+
+<main class="jobseeker-profile-page">
+    <section class="jobseeker-profile-layout">
+        <aside class="jobseeker-side-card">
+            <div class="jobseeker-avatar-wrap">
+                {% if jobseeker_profile.profile_picture %}
+                <img src="{{ jobseeker_profile.profile_picture.url }}" alt="{{ full_name }} profile photo">
+                {% else %}
+                <img src="{% static 'image/default_profile.svg' %}" alt="Default profile photo">
+                {% endif %}
+            </div>
+            <h2>{{ full_name }}</h2>
+            <p>{{ jobseeker_user_profile.email }}</p>
+            <div class="jobseeker-badges">
+                <span class="jobseeker-badge">{{ jobseeker_user_profile.get_gender_display }}</span>
+                <span class="jobseeker-badge">Jobseeker</span>
+            </div>
+
+            <div class="jobseeker-side-actions">
+                {% if jobseeker_profile.resume %}
+                <a class="jobseeker-btn jobseeker-btn-primary" href="{{ jobseeker_profile.resume.url }}" target="_blank"
+                    rel="noopener">View Resume</a>
+                {% endif %}
+                <a class="jobseeker-btn jobseeker-btn-gold" href="{% url 'home' %}">Back to Home</a>
+            </div>
+        </aside>
+
+        <section class="jobseeker-detail-card">
+            <div class="jobseeker-detail-grid">
+                <div class="jobseeker-detail-block">
+                    <h3>Personal Information</h3>
+                    <p class="jobseeker-field"><strong>Username:</strong> {{ jobseeker_user_profile.user.username }}</p>
+                    <p class="jobseeker-field"><strong>Date of Birth:</strong> {{
+                        jobseeker_user_profile.date_of_birth|default:"Not provided" }}</p>
+                    <p class="jobseeker-field"><strong>Gender:</strong> {{ jobseeker_user_profile.get_gender_display }}
+                    </p>
+                </div>
+
+                <div class="jobseeker-detail-block">
+                    <h3>Contact Information</h3>
+                    <p class="jobseeker-field"><strong>Email:</strong> {{ jobseeker_user_profile.email }}</p>
+                    <p class="jobseeker-field"><strong>Phone:</strong> {{
+                        jobseeker_user_profile.phone_number|default:"Not provided" }}</p>
+                    <p class="jobseeker-field"><strong>Location:</strong> {{ location }}</p>
+                    <p class="jobseeker-field"><strong>Address:</strong> {{ jobseeker_user_profile.address|default:"Not
+                        provided" }}</p>
+                </div>
+
+                <div class="jobseeker-detail-block">
+                    <h3>Professional Details</h3>
+                    <p class="jobseeker-field"><strong>Work Experience:</strong></p>
+                    <p class="jobseeker-field">{{ jobseeker_profile.work_experience|default:"Not provided" }}</p>
+                </div>
+
+                <div class="jobseeker-detail-block">
+                    <h3>Links</h3>
+                    <p class="jobseeker-field">
+                        <strong>LinkedIn:</strong>
+                        {% if jobseeker_profile.linkedin %}
+                        <a href="{{ jobseeker_profile.linkedin }}" target="_blank" rel="noopener">{{
+                            jobseeker_profile.linkedin }}</a>
+                        {% else %}
+                        Not provided
+                        {% endif %}
+                    </p>
+                    <p class="jobseeker-field">
+                        <strong>GitHub:</strong>
+                        {% if jobseeker_profile.github %}
+                        <a href="{{ jobseeker_profile.github }}" target="_blank" rel="noopener">{{
+                            jobseeker_profile.github }}</a>
+                        {% else %}
+                        Not provided
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </section>
+    </section>
+</main>
+{% endblock %}
