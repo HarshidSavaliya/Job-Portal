@@ -8,6 +8,52 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
 
+        <!-- Profile Card -->
+        <div class="profile-card">
+
+            <div class="profile-top">
+                <div class="profile-avatar">
+                    {% if recruiter_profile.profile_picture %}
+                    <img src="{{ recruiter_profile.profile_picture.url }}" alt="Recruiter profile photo">
+                    {% else %}
+                    <img src="{% static 'image/default_profile.svg' %}" alt="Default profile photo">
+                    {% endif %}
+                </div>
+
+                <div class="profile-info">
+                    <h3>{{ user_profile.user.username }}</h3>
+                    <p>{{ user_profile.user.email }}</p>
+                    <span class="badge">Active</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="profile-stats">
+                <div>
+                    <h2>85%</h2>
+                    <span>Profile Score</span>
+                </div>
+                <div>
+                    <h2>12</h2>
+                    <span>Job Post</span>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="profile-progress">
+                <div class="progress-text">
+                    <span>Profile Completion</span>
+                    <strong>85%</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+
+                <a href="#" class="btn-complete">Complete Profile</a>
+            </div>
+
+        </div>
+
         <!-- Quick Actions -->
         <div class="quick-section">
             <h3>Quick Actions</h3>
@@ -19,6 +65,72 @@
             </ul>
         </div>
     </aside>
+    <!-- MAIN CONTENT -->
+    <section class="content">
+        <h1>Welcome back, {{ user_profile.user.first_name }}!</h1>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ job_post_count }}</h3>
+                    <span>Total Job Posts</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ application_count }}</h3>
+                    <span>Total Applications</span>
+                </div>
+            </div>
+
+            <div class="card ">
+                <div class="card-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ profile_view_count }}</h3>
+                    <span>Profile Views</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ message_count }}</h3>
+                    <span>Total Messages</span>
+                </div>
+            </div>
+        </div>
+        <div class="auth-footer">
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
+        </div>
+
+        <div class="quick-section" id="my-job-posts">
+            <h3>My Job Posts</h3>
+            {% if my_jobs %}
+            <ul>
+                {% for job in my_jobs %}
+                <li>
+                    <a href="{% url 'edit_job_post' job.id %}">
+                        <i class="fas fa-pen-to-square"></i>
+                        Edit: {{ job.title }} ({{ job.company }})
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No job posts yet.</p>
+            {% endif %}
+        </div>
+    </section>
 
 </main>
 
