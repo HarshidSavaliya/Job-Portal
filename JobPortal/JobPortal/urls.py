@@ -19,6 +19,10 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_header = 'JobPortal Administration'
+admin.site.site_title = 'JobPortal Admin'
+admin.site.index_title = 'Manage users, jobs, and applications'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),

@@ -13,6 +13,7 @@ class ApplicationForm(forms.ModelForm):
     )
 
     resume = forms.FileField(
+        required=False,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'})
     )
 
@@ -23,3 +24,12 @@ class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ['name', 'email', 'resume', 'experience']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        resume = cleaned_data.get('resume')
+
+        if not resume and not (self.instance and self.instance.pk and self.instance.resume):
+            self.add_error('resume', 'Please upload a resume.')
+
+        return cleaned_data

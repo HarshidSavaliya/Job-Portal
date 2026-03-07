@@ -30,11 +30,11 @@
             <!-- Stats -->
             <div class="profile-stats">
                 <div>
-                    <h2>85%</h2>
+                    <h2>{{ profile_completion }}%</h2>
                     <span>Profile Score</span>
                 </div>
                 <div>
-                    <h2>12</h2>
+                    <h2>{{ application_count }}</h2>
                     <span>Applications</span>
                 </div>
             </div>
@@ -43,13 +43,13 @@
             <div class="profile-progress">
                 <div class="progress-text">
                     <span>Profile Completion</span>
-                    <strong>85%</strong>
+                    <strong>{{ profile_completion }}%</strong>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 85%;"></div>
+                    <div class="progress-fill" style="width: {{ profile_completion }}%;"></div>
                 </div>
 
-                <a href="#" class="btn-complete">Complete Profile</a>
+                <a href="{% url 'update_profile' %}" class="btn-complete">Complete Profile</a>
             </div>
 
         </div>
@@ -59,9 +59,9 @@
             <h3>Quick Actions</h3>
             <ul>
                 <li><a href="{% url 'update_profile' %}"><i class="fas fa-user-edit"></i> Update Profile</a></li>
-                <li><a href="#"><i class="fas fa-file-upload"></i> Edit Applications</a></li>
-                <li><a href="#"><i class="fas fa-bookmark"></i> View Applications</a></li>
-                <li><a href="#"><i class="fas fa-bell"></i> Job Alerts</a></li>
+                <li><a href="{% url 'my_applications' %}"><i class="fas fa-file-upload"></i> Edit Applications</a></li>
+                <li><a href="{% url 'my_applications' %}"><i class="fas fa-bookmark"></i> View Applications</a></li>
+                <li><a href="{% url 'home' %}"><i class="fas fa-bell"></i> Browse Jobs</a></li>
             </ul>
         </div>
 
@@ -69,7 +69,25 @@
 
     <!-- MAIN CONTENT -->
     <section class="content">
-        <h1>Welcome back, {{ user_profile.get_full_name}}!</h1>
+        <h1>Welcome back, {{ display_name }}!</h1>
+
+        <div class="quick-section">
+            <h3>Recent Applications</h3>
+            {% if recent_applications %}
+            <ul>
+                {% for application in recent_applications %}
+                <li>
+                    <a href="{% url 'edit_application' application.id %}">
+                        <i class="fas fa-pen-to-square"></i>
+                        {{ application.job.title }} at {{ application.job.company }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No applications submitted yet.</p>
+            {% endif %}
+        </div>
     </section>
 
 </main>

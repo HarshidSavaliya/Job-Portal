@@ -1,0 +1,17 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local tooling scratch space
+.codex-temp/
+
+# Django user-uploaded media
+media/
+profile_pictures/
+company_logos/
+resumes/

@@ -30,11 +30,11 @@
             <!-- Stats -->
             <div class="profile-stats">
                 <div>
-                    <h2>85%</h2>
+                    <h2>{{ profile_completion }}%</h2>
                     <span>Profile Score</span>
                 </div>
                 <div>
-                    <h2>12</h2>
+                    <h2>{{ job_post_count }}</h2>
                     <span>Job Post</span>
                 </div>
             </div>
@@ -43,13 +43,13 @@
             <div class="profile-progress">
                 <div class="progress-text">
                     <span>Profile Completion</span>
-                    <strong>85%</strong>
+                    <strong>{{ profile_completion }}%</strong>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" style="width: {{ profile_completion }}%;"></div>
                 </div>
 
-                <a href="#" class="btn-complete">Complete Profile</a>
+                <a href="{% url 'update_profile' %}" class="btn-complete">Complete Profile</a>
             </div>
 
         </div>
@@ -61,13 +61,13 @@
                 <li><a href="{% url 'update_profile' %}"><i class="fas fa-user-edit"></i> Update Profile</a></li>
                 <li><a href="{% url 'create_job_post' %}"><i class="fas fa-pen-to-square"></i> Create Job Post</a></li>
                 <li><a href="#my-job-posts"><i class="fas fa-briefcase"></i> Edit Job Post</a></li>
-                <li><a href="#"><i class="fas fa-users"></i> View Applications</a></li>
+                <li><a href="{% url 'recruiter_applications' %}"><i class="fas fa-users"></i> View Applications</a></li>
             </ul>
         </div>
     </aside>
     <!-- MAIN CONTENT -->
     <section class="content">
-        <h1>Welcome back, {{ user_profile.user.first_name }}!</h1>
+        <h1>Welcome back, {{ display_name }}!</h1>
 
         <div class="dashboard-cards">
             <div class="card">
@@ -119,10 +119,18 @@
             <ul>
                 {% for job in my_jobs %}
                 <li>
-                    <a href="{% url 'edit_job_post' job.id %}">
-                        <i class="fas fa-pen-to-square"></i>
-                        Edit: {{ job.title }} ({{ job.company }})
-                    </a>
+                    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                        <a href="{% url 'edit_job_post' job.id %}">
+                            <i class="fas fa-pen-to-square"></i>
+                            Edit: {{ job.title }} ({{ job.company }})
+                        </a>
+                        <form method="post" action="{% url 'delete_job_post' job.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" style="border:none; background:none; color:#c0392b; cursor:pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>

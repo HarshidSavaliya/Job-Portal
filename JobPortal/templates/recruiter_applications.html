@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Received Applications{% endblock %}
+
+{% block content %}
+<section class="auth-wrapper">
+    <div class="auth-card" style="max-width: 1040px;">
+        <h2>Received Applications</h2>
+        <p>Total applications: {{ application_count }}</p>
+
+        {% if applications %}
+        <div style="display:grid; gap:1rem;">
+            {% for application in applications %}
+            <article style="border:1px solid #e4e7ee; border-radius:12px; padding:1rem;">
+                <h3 style="margin-top:0;">{{ application.job.title }}</h3>
+                <p><strong>Applicant:</strong>
+                    {% if application.applicant %}
+                    {{ application.applicant.user.username }}
+                    {% else %}
+                    {{ application.name }}
+                    {% endif %}
+                </p>
+                <p><strong>Email:</strong> {{ application.email }}</p>
+                <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
+                <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+                    {% if application.resume %}
+                    <a class="btn-primary" href="{{ application.resume.url }}" target="_blank">View Resume</a>
+                    {% endif %}
+                    {% if application.applicant %}
+                    <a class="btn-primary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No applications received yet.</p>
+        {% endif %}
+
+        <div class="auth-footer">
+            <p><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -145,7 +145,11 @@
                 <p class="home-description">{{ job.job_description|truncatechars:180 }}</p>
                 <div class="home-card-footer">
                     <span class="home-salary">Rs. {{ job.salary }}</span>
+                    {% if job.id in applied_job_ids %}
+                    <a href="{% url 'my_applications' %}" class="home-action home-action-secondary">View Application</a>
+                    {% else %}
                     <a href="{% url 'apply_job' job.id %}" class="home-action">Apply Now</a>
+                    {% endif %}
                 </div>
             </article>
             {% endfor %}

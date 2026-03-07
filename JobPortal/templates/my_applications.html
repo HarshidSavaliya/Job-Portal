@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<section class="auth-wrapper">
+    <div class="auth-card" style="max-width: 960px;">
+        <h2>My Applications</h2>
+        <p>Total applications: {{ application_count }}</p>
+
+        {% if applications %}
+        <div style="display:grid; gap:1rem;">
+            {% for application in applications %}
+            <article style="border:1px solid #e4e7ee; border-radius:12px; padding:1rem;">
+                <h3 style="margin-top:0;">{{ application.job.title }}</h3>
+                <p>{{ application.job.company }} - {{ application.job.location }}</p>
+                <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
+                <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+                    <a class="btn-primary" href="{% url 'edit_application' application.id %}">Edit</a>
+                    {% if application.resume %}
+                    <a class="btn-primary" href="{{ application.resume.url }}" target="_blank">View Resume</a>
+                    {% endif %}
+                    <form method="post" action="{% url 'delete_application' application.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary" style="background:#c0392b;">Delete</button>
+                    </form>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>You have not applied for any jobs yet.</p>
+        {% endif %}
+
+        <div class="auth-footer">
+            <p><a href="{% url 'home' %}">Browse Jobs</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

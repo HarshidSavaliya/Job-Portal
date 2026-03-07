@@ -78,7 +78,7 @@
                             <label><i class="fas fa-venus-mars"></i> Gender</label>
                             <select name="gender" id="id_gender" class="form-control">
                                 {% for choice_value, choice_label in user_form.fields.gender.choices %}
-                                <option value="{{ choice_value }}" {% if choice_value==user_form.gender.value %}
+                                <option value="{{ choice_value }}" {% if choice_value == user_form.gender.value %}
                                     selected{% endif %}>
                                     {{ choice_label }}
                                 </option>

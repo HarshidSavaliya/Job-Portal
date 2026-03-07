@@ -77,5 +77,5 @@ class RecruiterProfile(models.Model):
         return f"{self.user_profile.user.username}'s Recruiter Profile"
 
 
-# Backward-compatible alias for existing imports/usages.
+
 UserProfile = User

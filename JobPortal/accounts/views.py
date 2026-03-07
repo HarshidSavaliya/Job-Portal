@@ -3,11 +3,61 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import UserProfile , RecruiterProfile, JobSeekerProfile 
 from .forms import RegistrationForm , UpdateUserProfileForm , UpdateJobSeekerProfileForm , UpdateRecruiterProfileForm
 from django.contrib import messages
 from jobs.models import Job
 from applications.models import Application
+
+
+def _display_name(user_profile):
+    full_name = user_profile.get_full_name().strip()
+    return full_name or user_profile.user.username
+
+
+def _calculate_profile_completion(user_profile, detail_profile=None):
+    fields = [
+        user_profile.first_name,
+        user_profile.last_name,
+        user_profile.email,
+        user_profile.phone_number,
+        user_profile.gender,
+        user_profile.address,
+        user_profile.city,
+        user_profile.state,
+        user_profile.country,
+        user_profile.zip_code,
+    ]
+
+    if isinstance(detail_profile, JobSeekerProfile):
+        fields.extend(
+            [
+                detail_profile.profile_picture,
+                detail_profile.resume,
+                detail_profile.work_experience,
+                detail_profile.linkedin,
+                detail_profile.github,
+            ]
+        )
+    elif isinstance(detail_profile, RecruiterProfile):
+        fields.extend(
+            [
+                detail_profile.profile_picture,
+                detail_profile.experience,
+                detail_profile.company_position,
+                detail_profile.company_logo,
+                detail_profile.company_name,
+                detail_profile.company_website,
+                detail_profile.company_description,
+                detail_profile.company_address,
+                detail_profile.company_phone,
+                detail_profile.company_email,
+            ]
+        )
+
+    completed_fields = sum(1 for value in fields if value)
+    return int((completed_fields / len(fields)) * 100) if fields else 0
 
 
 def index(request):
@@ -30,9 +80,16 @@ def home(request):
     jobs = Job.objects.none()
     jobseekers = UserProfile.objects.none()
     jobseeker_cards = []
+    applied_job_ids = []
 
     if is_jobseeker:
         jobs = Job.objects.select_related('recruiter__user_profile__user').order_by('-created_at')
+        applied_job_ids = list(
+            Application.objects.filter(
+                Q(applicant=user_profile) |
+                Q(applicant__isnull=True, email__iexact=user_profile.email)
+            ).values_list('job_id', flat=True)
+        )
     elif is_recruiter:
         jobseekers = UserProfile.objects.filter(role='jobseeker').select_related('user').order_by('-id')
         for seeker in jobseekers:
@@ -54,6 +111,7 @@ def home(request):
         'jobs': jobs,
         'jobseekers': jobseekers,
         'jobseeker_cards': jobseeker_cards,
+        'applied_job_ids': applied_job_ids,
         }
     return render(request, 'home.html', context)
 
@@ -122,13 +180,16 @@ def dashboard(request):
 
         job_post_count = my_jobs.count()
         application_count = Application.objects.filter(recruiter=recruiter_profile).count()
+        profile_completion = _calculate_profile_completion(user_profile, recruiter_profile)
 
         context = {
             'user_profile': user_profile,
+            'display_name': _display_name(user_profile),
             'recruiter_profile': recruiter_profile,
             'my_jobs': my_jobs,
             'job_post_count': job_post_count,
             'application_count': application_count,
+            'profile_completion': profile_completion,
             'profile_view_count': 0,
             'message_count': 0,
         }
@@ -140,10 +201,22 @@ def dashboard(request):
         jobseeker_profile, _ = JobSeekerProfile.objects.get_or_create(
             user=user_profile
         )
+        applications = Application.objects.select_related(
+            'job',
+            'recruiter__user_profile__user',
+        ).filter(
+            Q(applicant=user_profile) |
+            Q(applicant__isnull=True, email__iexact=user_profile.email)
+        ).distinct()
+        profile_completion = _calculate_profile_completion(user_profile, jobseeker_profile)
 
         context = {
             'user_profile': user_profile,
+            'display_name': _display_name(user_profile),
             'jobseeker_profile': jobseeker_profile,
+            'application_count': applications.count(),
+            'recent_applications': applications[:5],
+            'profile_completion': profile_completion,
         }
 
         return render(request, 'dashboard_JobSeeker.html', context)

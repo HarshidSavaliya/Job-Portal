@@ -84,7 +84,26 @@ def edit_job_post(request, job_id):
             'form': form,
             'form_title': 'Edit Job Post',
             'submit_label': 'Save Changes',
+            'job': job,
+            'show_delete': True,
         },
     )
+
+
+@login_required(login_url='login')
+def delete_job_post(request, job_id):
+    recruiter_profile = _get_recruiter_profile_or_none(request.user)
+    if recruiter_profile is None:
+        messages.error(request, 'You need to be a recruiter to delete a job post.')
+        return redirect('home')
+
+    job = get_object_or_404(Job, pk=job_id, recruiter=recruiter_profile)
+
+    if request.method == 'POST':
+        job_title = job.title
+        job.delete()
+        messages.success(request, f'Job post "{job_title}" deleted successfully.')
+
+    return redirect('dashboard')
 
 

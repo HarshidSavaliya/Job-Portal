@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Apply for {{ job.title }}{% endblock %}
+{% block title %}{{ page_title|default:"Application" }}{% endblock %}
 
 {% block content %}
 <section class="auth-wrapper">
     <div class="auth-card" style="max-width: 680px;">
-        <h2>Apply for {{ job.title }}</h2>
+        <h2>{{ page_title|default:"Application" }}</h2>
         <p>{{ job.company }} - {{ job.location }}</p>
 
         <form method="post" enctype="multipart/form-data" novalidate>
@@ -36,6 +36,11 @@
             <div class="form-group">
                 <label for="{{ form.resume.id_for_label }}">Resume</label>
                 {{ form.resume }}
+                {% if application and application.resume %}
+                <div class="auth-footer">
+                    <p>Current resume: <a href="{{ application.resume.url }}" target="_blank">View uploaded file</a></p>
+                </div>
+                {% endif %}
                 {% if form.resume.errors %}
                 <div class="error-message">{{ form.resume.errors|join:", " }}</div>
                 {% endif %}
@@ -49,11 +54,11 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="btn-primary">Submit Application</button>
+            <button type="submit" class="btn-primary">{{ submit_label|default:"Submit Application" }}</button>
         </form>
 
         <div class="auth-footer">
-            <p><a href="{% url 'home' %}">Back to Home</a></p>
+            <p><a href="{% url 'my_applications' %}">Back to Applications</a></p>
         </div>
     </div>
 </section>
