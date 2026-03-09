@@ -1,24 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'auth_base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profile - JobPortal</title>
+{% block title %}Update Profile - Job Portal{% endblock %}
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% block body_class %}auth-page update-page{% endblock %}
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-</head>
-
-<body class="auth-page update-page">
-
+{% block content %}
     <div class="auth-container">
 
         <div class="auth-card">
@@ -49,19 +35,19 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> First Name</label>
+                            <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
                             <input type="text" name="first_name" id="id_first_name" class="form-control"
                                 value="{{ user_form.first_name.value|default_if_none:'' }}" placeholder="First name">
                         </div>
 
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Middle Name</label>
+                            <label for="id_middle_name"><i class="fas fa-user"></i> Middle Name</label>
                             <input type="text" name="middle_name" id="id_middle_name" class="form-control"
                                 value="{{ user_form.middle_name.value|default_if_none:'' }}" placeholder="Middle name">
                         </div>
 
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Last Name</label>
+                            <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
                             <input type="text" name="last_name" id="id_last_name" class="form-control"
                                 value="{{ user_form.last_name.value|default_if_none:'' }}" placeholder="Last name">
                         </div>
@@ -69,13 +55,13 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label><i class="fas fa-calendar"></i> Date of Birth</label>
+                            <label for="id_date_of_birth"><i class="fas fa-calendar"></i> Date of Birth</label>
                             <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control"
                                 value="{% if user_form.date_of_birth.value %}{{ user_form.date_of_birth.value|date:'Y-m-d' }}{% endif %}">
                         </div>
 
                         <div class="form-group">
-                            <label><i class="fas fa-venus-mars"></i> Gender</label>
+                            <label for="id_gender"><i class="fas fa-venus-mars"></i> Gender</label>
                             <select name="gender" id="id_gender" class="form-control">
                                 {% for choice_value, choice_label in user_form.fields.gender.choices %}
                                 <option value="{{ choice_value }}" {% if choice_value == user_form.gender.value %}
@@ -93,32 +79,32 @@
                     </h3>
 
                     <div class="form-group">
-                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <label for="id_phone_number"><i class="fas fa-phone"></i> Phone Number</label>
                         <input type="text" name="phone_number" id="id_phone_number" class="form-control"
                             value="{{ user_form.phone_number.value|default_if_none:'' }}" placeholder="Phone number">
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <label for="id_email"><i class="fas fa-envelope"></i> Email</label>
                         <input type="email" name="email" id="id_email" class="form-control"
                             value="{{ user_form.email.value|default_if_none:'' }}" placeholder="Email">
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <label for="id_address"><i class="fas fa-map-marker-alt"></i> Address</label>
                         <textarea name="address" id="id_address" class="form-control" rows="4"
                             placeholder="Address">{{ user_form.address.value|default_if_none:'' }}</textarea>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>City</label>
+                            <label for="id_city">City</label>
                             <input type="text" name="city" id="id_city" class="form-control"
                                 value="{{ user_form.city.value|default_if_none:'' }}" placeholder="City">
                         </div>
 
                         <div class="form-group">
-                            <label>State</label>
+                            <label for="id_state">State</label>
                             <input type="text" name="state" id="id_state" class="form-control"
                                 value="{{ user_form.state.value|default_if_none:'' }}" placeholder="State">
                         </div>
@@ -126,13 +112,13 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Country</label>
+                            <label for="id_country">Country</label>
                             <input type="text" name="country" id="id_country" class="form-control"
                                 value="{{ user_form.country.value|default_if_none:'' }}" placeholder="Country">
                         </div>
 
                         <div class="form-group">
-                            <label>Zip Code</label>
+                            <label for="id_zip_code">Zip Code</label>
                             <input type="text" name="zip_code" id="id_zip_code" class="form-control"
                                 value="{{ user_form.zip_code.value|default_if_none:'' }}" placeholder="Zip code">
                         </div>
@@ -146,17 +132,17 @@
                     </h3>
 
                     <div class="form-group">
-                        <label>Profile Picture</label>
+                        <label for="id_profile_picture">Profile Picture</label>
                         <input type="file" name="profile_picture" id="id_profile_picture" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>Resume</label>
+                        <label for="id_resume">Resume</label>
                         <input type="file" name="resume" id="id_resume" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>Work Experience</label>
+                        <label for="id_work_experience">Work Experience</label>
                         <textarea name="work_experience" id="id_work_experience" class="form-control" rows="4"
                             placeholder="Describe your work experience">{{ jobseeker_form.work_experience.value|default_if_none:'' }}</textarea>
                     </div>
@@ -166,14 +152,14 @@
                     </h3>
 
                     <div class="form-group">
-                        <label>LinkedIn</label>
+                        <label for="id_linkedin">LinkedIn</label>
                         <input type="url" name="linkedin" id="id_linkedin" class="form-control"
                             value="{{ jobseeker_form.linkedin.value|default_if_none:'' }}"
                             placeholder="https://linkedin.com/in/username">
                     </div>
 
                     <div class="form-group">
-                        <label>GitHub</label>
+                        <label for="id_github">GitHub</label>
                         <input type="url" name="github" id="id_github" class="form-control"
                             value="{{ jobseeker_form.github.value|default_if_none:'' }}"
                             placeholder="https://github.com/username">
@@ -189,18 +175,18 @@
                     </h3>
 
                     <div class="form-group">
-                        <label>Profile Picture</label>
+                        <label for="id_profile_picture">Profile Picture</label>
                         <input type="file" name="profile_picture" id="id_profile_picture" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>Experience</label>
+                        <label for="id_experience">Experience</label>
                         <textarea name="experience" id="id_experience" class="form-control" rows="4"
                             placeholder="Your hiring/recruiting experience">{{ recruiter_form.experience.value|default_if_none:'' }}</textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Company Position</label>
+                        <label for="id_company_position">Company Position</label>
                         <input type="text" name="company_position" id="id_company_position" class="form-control"
                             value="{{ recruiter_form.company_position.value|default_if_none:'' }}"
                             placeholder="Company position">
@@ -211,45 +197,45 @@
                     </h3>
 
                     <div class="form-group">
-                        <label>Company Logo</label>
+                        <label for="id_company_logo">Company Logo</label>
                         <input type="file" name="company_logo" id="id_company_logo" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>Company Name</label>
+                        <label for="id_company_name">Company Name</label>
                         <input type="text" name="company_name" id="id_company_name" class="form-control"
                             value="{{ recruiter_form.company_name.value|default_if_none:'' }}"
                             placeholder="Company name">
                     </div>
 
                     <div class="form-group">
-                        <label>Company Website</label>
+                        <label for="id_company_website">Company Website</label>
                         <input type="url" name="company_website" id="id_company_website" class="form-control"
                             value="{{ recruiter_form.company_website.value|default_if_none:'' }}"
                             placeholder="https://example.com">
                     </div>
 
                     <div class="form-group">
-                        <label>Company Description</label>
+                        <label for="id_company_description">Company Description</label>
                         <textarea name="company_description" id="id_company_description" class="form-control" rows="4"
                             placeholder="Company description">{{ recruiter_form.company_description.value|default_if_none:'' }}</textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Company Address</label>
+                        <label for="id_company_address">Company Address</label>
                         <textarea name="company_address" id="id_company_address" class="form-control" rows="3"
                             placeholder="Company address">{{ recruiter_form.company_address.value|default_if_none:'' }}</textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Company Phone</label>
+                        <label for="id_company_phone">Company Phone</label>
                         <input type="text" name="company_phone" id="id_company_phone" class="form-control"
                             value="{{ recruiter_form.company_phone.value|default_if_none:'' }}"
                             placeholder="Company phone">
                     </div>
 
                     <div class="form-group">
-                        <label>Company Email</label>
+                        <label for="id_company_email">Company Email</label>
                         <input type="email" name="company_email" id="id_company_email" class="form-control"
                             value="{{ recruiter_form.company_email.value|default_if_none:'' }}"
                             placeholder="Company email">
@@ -272,6 +258,4 @@
 
     </div>
 
-</body>
-
-</html>
+{% endblock %}

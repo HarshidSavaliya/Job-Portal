@@ -1,141 +1,146 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <title>Post Job</title>
+{% block title %}{{ form_title|default:"Post a Job" }} - Job Portal{% endblock %}
 
-    <!-- Bootstrap (optional but recommended) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block content %}
+<section class="auth-wrapper">
+    <div class="auth-card auth-card-xl">
+        <div class="auth-header">
+            <div class="header-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h2>{{ form_title|default:"Post a Job" }}</h2>
+            <p>Add the job details clearly so applicants can understand the role.</p>
+        </div>
 
-<body style="background:#f5f6fa;">
-
-    <div class="container mt-5">
-        <div class="card shadow-sm p-4">
-            <h3 class="mb-4 text-center">{{ form_title|default:"Post a Job" }}</h3>
-
-            <form method="POST">
+        <div class="auth-body">
+            <form method="POST" novalidate>
                 {% csrf_token %}
 
-                <!-- Show Form Errors -->
-                {% if form.errors %}
-                <div class="alert alert-danger">
-                    {{ form.errors }}
+                {% if form.non_field_errors %}
+                <div class="error-messages">
+                    {% for error in form.non_field_errors %}
+                    <p><i class="fas fa-exclamation-circle"></i> {{ error }}</p>
+                    {% endfor %}
                 </div>
                 {% endif %}
 
-                <div class="mb-3">
-                    <label>Job Title</label>
-                    <input type="text" name="title" id="id_title" class="form-control"
-                        value="{{ form.title.value|default_if_none:'' }}" required>
-                    {% if form.title.errors %}
-                    <div class="text-danger small mt-1">{{ form.title.errors|striptags }}</div>
-                    {% endif %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_title">Job Title</label>
+                        <input type="text" name="title" id="id_title" class="form-control"
+                            value="{{ form.title.value|default_if_none:'' }}" required>
+                        {% if form.title.errors %}
+                        <div class="error-message">{{ form.title.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_job_type">Job Type</label>
+                        <select name="job_type" id="id_job_type" class="form-control" required>
+                            {% for choice_value, choice_label in form.fields.job_type.choices %}
+                            <option value="{{ choice_value }}" {% if form.job_type.value == choice_value %}selected{% endif %}>
+                                {{ choice_label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.job_type.errors %}
+                        <div class="error-message">{{ form.job_type.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label>Job Type</label>
-                    <select name="job_type" id="id_job_type" class="form-control" required>
-                        {% for choice_value, choice_label in form.fields.job_type.choices %}
-                        <option value="{{ choice_value }}" {% if form.job_type.value == choice_value %}selected{% endif %}>
-                            {{ choice_label }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                    {% if form.job_type.errors %}
-                    <div class="text-danger small mt-1">{{ form.job_type.errors|striptags }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="mb-3">
-                    <label>Job Category</label>
+                <div class="form-group">
+                    <label for="{{ form.job_category.id_for_label }}">Job Category</label>
                     {{ form.job_category }}
                     {% if form.job_category.errors %}
-                    <div class="text-danger small mt-1">{{ form.job_category.errors|striptags }}</div>
+                    <div class="error-message">{{ form.job_category.errors|striptags }}</div>
                     {% endif %}
                 </div>
 
-                <div class="mb-3">
-                    <label>Job Description</label>
+                <div class="form-group">
+                    <label for="id_job_description">Job Description</label>
                     <textarea name="job_description" id="id_job_description" class="form-control" rows="4"
                         required>{{ form.job_description.value|default_if_none:'' }}</textarea>
                     {% if form.job_description.errors %}
-                    <div class="text-danger small mt-1">{{ form.job_description.errors|striptags }}</div>
+                    <div class="error-message">{{ form.job_description.errors|striptags }}</div>
                     {% endif %}
                 </div>
 
-                <div class="mb-3">
-                    <label>Company</label>
-                    <input type="text" name="company" id="id_company" class="form-control"
-                        value="{{ form.company.value|default_if_none:'' }}" required>
-                    {% if form.company.errors %}
-                    <div class="text-danger small mt-1">{{ form.company.errors|striptags }}</div>
-                    {% endif %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_company">Company</label>
+                        <input type="text" name="company" id="id_company" class="form-control"
+                            value="{{ form.company.value|default_if_none:'' }}" required>
+                        {% if form.company.errors %}
+                        <div class="error-message">{{ form.company.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_location">Location</label>
+                        <input type="text" name="location" id="id_location" class="form-control"
+                            value="{{ form.location.value|default_if_none:'' }}" required>
+                        {% if form.location.errors %}
+                        <div class="error-message">{{ form.location.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label>Location</label>
-                    <input type="text" name="location" id="id_location" class="form-control"
-                        value="{{ form.location.value|default_if_none:'' }}" required>
-                    {% if form.location.errors %}
-                    <div class="text-danger small mt-1">{{ form.location.errors|striptags }}</div>
-                    {% endif %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_salary">Salary</label>
+                        <input type="number" step="0.01" min="0" name="salary" id="id_salary" class="form-control"
+                            value="{{ form.salary.value|default_if_none:'' }}" required>
+                        {% if form.salary.errors %}
+                        <div class="error-message">{{ form.salary.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_education_requirements">Education Requirements</label>
+                        <textarea name="education_requirements" id="id_education_requirements" class="form-control"
+                            rows="3" required>{{ form.education_requirements.value|default_if_none:'' }}</textarea>
+                        {% if form.education_requirements.errors %}
+                        <div class="error-message">{{ form.education_requirements.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label>Salary</label>
-                    <input type="number" step="0.01" min="0" name="salary" id="id_salary" class="form-control"
-                        value="{{ form.salary.value|default_if_none:'' }}" required>
-                    {% if form.salary.errors %}
-                    <div class="text-danger small mt-1">{{ form.salary.errors|striptags }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="mb-3">
-                    <label>Education Requirements</label>
-                    <textarea name="education_requirements" id="id_education_requirements" class="form-control"
-                        rows="3" required>{{ form.education_requirements.value|default_if_none:'' }}</textarea>
-                    {% if form.education_requirements.errors %}
-                    <div class="text-danger small mt-1">{{ form.education_requirements.errors|striptags }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="mb-3">
-                    <label>Experience Requirements</label>
+                <div class="form-group">
+                    <label for="id_experience_requirements">Experience Requirements</label>
                     <textarea name="experience_requirements" id="id_experience_requirements" class="form-control"
                         rows="3" required>{{ form.experience_requirements.value|default_if_none:'' }}</textarea>
                     {% if form.experience_requirements.errors %}
-                    <div class="text-danger small mt-1">{{ form.experience_requirements.errors|striptags }}</div>
+                    <div class="error-message">{{ form.experience_requirements.errors|striptags }}</div>
                     {% endif %}
                 </div>
 
-                <div class="mb-3">
-                    <label>Skills Required</label>
+                <div class="form-group">
+                    <label for="id_skills_required">Skills Required</label>
                     <textarea name="skills_required" id="id_skills_required" class="form-control" rows="3"
                         required>{{ form.skills_required.value|default_if_none:'' }}</textarea>
                     {% if form.skills_required.errors %}
-                    <div class="text-danger small mt-1">{{ form.skills_required.errors|striptags }}</div>
+                    <div class="error-message">{{ form.skills_required.errors|striptags }}</div>
                     {% endif %}
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn-primary">
                     {{ submit_label|default:"Post Job" }}
                 </button>
             </form>
 
             {% if show_delete and job %}
-            <form method="POST" action="{% url 'delete_job_post' job.id %}" class="mt-3">
+            <form method="POST" action="{% url 'delete_job_post' job.id %}" class="post-job-delete-form">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger w-100">Delete Job Post</button>
+                <button type="submit" class="btn-primary btn-danger">Delete Job Post</button>
             </form>
             {% endif %}
 
-            <div class="mt-3 text-center">
+            <div class="auth-footer auth-footer-centered">
                 <a href="{% url 'dashboard' %}">Back to Dashboard</a>
             </div>
         </div>
     </div>
-
-</body>
-
-</html>
+</section>
+{% endblock %}

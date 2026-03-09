@@ -4,133 +4,19 @@
 {% block title %}Home - Job Portal{% endblock %}
 
 {% block content %}
-<style>
-    .home-dashboard {
-        max-width: 1280px !important;
-        margin: 2rem auto !important;
-        padding: 0 2rem !important;
-    }
-
-    .home-content {
-        width: 100% !important;
-    }
-
-    .home-content .home-grid {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
-        gap: 1.25rem !important;
-        margin-top: 1.5rem !important;
-    }
-
-    .home-content .job-post-card,
-    .home-content .jobseeker-card {
-        display: block !important;
-        border: 1px solid rgba(47, 79, 181, 0.14) !important;
-        border-radius: 12px !important;
-        background: #fff !important;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06) !important;
-        padding: 1.25rem !important;
-        height: 100% !important;
-    }
-
-    .home-content .home-card-head {
-        display: flex !important;
-        justify-content: space-between !important;
-        gap: 1rem !important;
-        align-items: flex-start !important;
-    }
-
-    .home-content .home-pill {
-        display: inline-block !important;
-        background: #F4F6FB !important;
-        color: #2F4FB5 !important;
-        border-radius: 999px !important;
-        padding: 0.25rem 0.75rem !important;
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-    }
-
-    .home-content .home-card-footer {
-        margin-top: auto !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 1rem !important;
-        padding-top: 1rem !important;
-    }
-
-    .home-content .home-action {
-        text-decoration: none !important;
-        background: #F5C15D !important;
-        color: #1E2A5A !important;
-        padding: 0.55rem 1rem !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    .home-content .home-action-secondary {
-        background: #2F4FB5 !important;
-        color: #FFFFFF !important;
-    }
-
-    .home-content .home-action-secondary:hover {
-        background: #1E2A5A !important;
-    }
-
-    .home-content .jobseeker-card {
-        padding: 1rem 1.1rem !important;
-    }
-
-    .home-content .seeker-head {
-        display: flex !important;
-        align-items: center !important;
-        gap: 0.85rem !important;
-        margin-bottom: 0.7rem !important;
-    }
-
-    .home-content .seeker-avatar {
-        width: 58px !important;
-        height: 58px !important;
-        border-radius: 50% !important;
-        overflow: hidden !important;
-        border: 2px solid #E3EAF8 !important;
-        background: #F7F9FF !important;
-        flex-shrink: 0 !important;
-    }
-
-    .home-content .seeker-avatar img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
-
-    .home-content .seeker-identity h3 {
-        margin: 0 !important;
-        line-height: 1.2 !important;
-    }
-
-    .home-content .seeker-identity .home-company {
-        margin: 0.2rem 0 0 !important;
-        word-break: break-word !important;
-    }
-
-    @media (max-width: 768px) {
-        .home-dashboard {
-            padding: 0 1rem !important;
-        }
-
-        .home-content .home-grid {
-            grid-template-columns: 1fr !important;
-        }
-    }
-</style>
 <main class="home-dashboard">
     <section class="content home-content">
         {% if is_jobseeker %}
         <h1>Available Jobs</h1>
+        {% if has_active_filters %}
+        <div class="home-search-summary">
+            <p>
+                Showing {{ search_result_count }} result{{ search_result_count|pluralize }}
+                {% if search_query %}for "{{ search_query }}"{% endif %}
+            </p>
+            <a href="{% url 'home' %}" class="home-clear-search">Clear filters</a>
+        </div>
+        {% endif %}
         {% if jobs %}
         <div class="home-grid">
             {% for job in jobs %}
@@ -159,6 +45,12 @@
         {% endif %}
         {% elif is_recruiter %}
         <h1>Jobseekers</h1>
+        {% if has_active_filters %}
+        <div class="home-search-summary">
+            <p>Showing {{ search_result_count }} result{{ search_result_count|pluralize }} for "{{ search_query }}"</p>
+            <a href="{% url 'home' %}" class="home-clear-search">Clear search</a>
+        </div>
+        {% endif %}
         {% if jobseeker_cards %}
         <div class="home-grid">
             {% for seeker_card in jobseeker_cards %}
@@ -173,11 +65,12 @@
                         {% endif %}
                     </div>
                     <div class="seeker-identity">
-                        <h3>{{ seeker_card.profile.user.username }}</h3>
+                        <h3>{{ seeker_card.display_name }}</h3>
                         <p class="home-company">{{ seeker_card.profile.email }}</p>
                     </div>
                 </div>
 
+                <p class="home-meta"><strong>Username:</strong> {{ seeker_card.profile.user.username }}</p>
                 <p class="home-meta"><strong>Phone:</strong> {{ seeker_card.profile.phone_number|default:"Not provided" }}</p>
                 <p class="home-meta"><strong>Gender:</strong> {{ seeker_card.profile.get_gender_display }}</p>
                 <p class="home-meta"><strong>Location:</strong>

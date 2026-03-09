@@ -4,7 +4,7 @@
 
 {% block content %}
 <section class="auth-wrapper">
-    <div class="auth-card" style="max-width: 680px;">
+    <div class="auth-card auth-card-wide">
         <h2>{{ page_title|default:"Application" }}</h2>
         <p>{{ job.company }} - {{ job.location }}</p>
 
@@ -38,7 +38,7 @@
                 {{ form.resume }}
                 {% if application and application.resume %}
                 <div class="auth-footer">
-                    <p>Current resume: <a href="{{ application.resume.url }}" target="_blank">View uploaded file</a></p>
+                    <p>Current resume: <a href="{{ application.resume.url }}" target="_blank" rel="noopener">View uploaded file</a></p>
                 </div>
                 {% endif %}
                 {% if form.resume.errors %}

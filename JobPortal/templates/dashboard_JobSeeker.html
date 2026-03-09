@@ -45,8 +45,15 @@
                     <span>Profile Completion</span>
                     <strong>{{ profile_completion }}%</strong>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: {{ profile_completion }}%;"></div>
+                <div
+                    class="progress-bar"
+                    role="progressbar"
+                    aria-label="Profile completion"
+                    aria-valuenow="{{ profile_completion }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    data-progress="{{ profile_completion }}">
+                    <div class="progress-fill"></div>
                 </div>
 
                 <a href="{% url 'update_profile' %}" class="btn-complete">Complete Profile</a>

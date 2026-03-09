@@ -4,15 +4,15 @@
 
 {% block content %}
 <section class="auth-wrapper">
-    <div class="auth-card" style="max-width: 1040px;">
+    <div class="auth-card auth-card-xl">
         <h2>Received Applications</h2>
-        <p>Total applications: {{ application_count }}</p>
+        <p class="panel-summary">Total applications: {{ application_count }}</p>
 
         {% if applications %}
-        <div style="display:grid; gap:1rem;">
+        <div class="panel-list">
             {% for application in applications %}
-            <article style="border:1px solid #e4e7ee; border-radius:12px; padding:1rem;">
-                <h3 style="margin-top:0;">{{ application.job.title }}</h3>
+            <article class="panel-item">
+                <h3>{{ application.job.title }}</h3>
                 <p><strong>Applicant:</strong>
                     {% if application.applicant %}
                     {{ application.applicant.user.username }}
@@ -23,12 +23,12 @@
                 <p><strong>Email:</strong> {{ application.email }}</p>
                 <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
                 <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
-                <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+                <div class="panel-actions">
                     {% if application.resume %}
-                    <a class="btn-primary" href="{{ application.resume.url }}" target="_blank">View Resume</a>
+                    <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
                     {% endif %}
                     {% if application.applicant %}
-                    <a class="btn-primary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
+                    <a class="btn-primary btn-secondary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
                     {% endif %}
                 </div>
             </article>

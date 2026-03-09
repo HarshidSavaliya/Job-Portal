@@ -76,22 +76,61 @@ def home(request):
 
     is_jobseeker = user_profile.role == 'jobseeker'
     is_recruiter = user_profile.role == 'recruiter'
+    search_query = request.GET.get('q', '').strip()
 
-    jobs = Job.objects.none()
-    jobseekers = UserProfile.objects.none()
-    jobseeker_cards = []
-    applied_job_ids = []
+    context = {
+        'user_profile': user_profile,
+        'is_jobseeker': is_jobseeker,
+        'is_recruiter': is_recruiter,
+        'jobs': Job.objects.none(),
+        'jobseekers': UserProfile.objects.none(),
+        'jobseeker_cards': [],
+        'applied_job_ids': [],
+        'search_query': search_query,
+        'search_result_count': 0,
+        'has_active_filters': bool(search_query),
+    }
 
     if is_jobseeker:
-        jobs = Job.objects.select_related('recruiter__user_profile__user').order_by('-created_at')
+        jobs = Job.objects.select_related(
+            'recruiter__user_profile__user',
+            'job_category',
+        ).order_by('-created_at')
+        if search_query:
+            jobs = jobs.filter(
+                Q(title__icontains=search_query) |
+                Q(company__icontains=search_query) |
+                Q(location__icontains=search_query) |
+                Q(job_category__name__icontains=search_query)
+            )
         applied_job_ids = list(
             Application.objects.filter(
                 Q(applicant=user_profile) |
                 Q(applicant__isnull=True, email__iexact=user_profile.email)
             ).values_list('job_id', flat=True)
         )
+        context.update(
+            {
+                'jobs': jobs,
+                'applied_job_ids': applied_job_ids,
+                'search_result_count': jobs.count(),
+            }
+        )
     elif is_recruiter:
-        jobseekers = UserProfile.objects.filter(role='jobseeker').select_related('user').order_by('-id')
+        jobseekers = (
+            UserProfile.objects.filter(role='jobseeker')
+            .select_related('user')
+            .order_by('-id')
+        )
+        jobseeker_cards = []
+        if search_query:
+            jobseekers = jobseekers.filter(
+                Q(user__username__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(middle_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
         for seeker in jobseekers:
             try:
                 seeker_profile = seeker.jobseeker_profile
@@ -101,18 +140,17 @@ def home(request):
                 {
                     'profile': seeker,
                     'jobseeker_profile': seeker_profile,
+                    'display_name': _display_name(seeker),
                 }
             )
+        context.update(
+            {
+                'jobseekers': jobseekers,
+                'jobseeker_cards': jobseeker_cards,
+                'search_result_count': len(jobseeker_cards),
+            }
+        )
 
-    context = {
-        'user_profile': user_profile,
-        'is_jobseeker': is_jobseeker,
-        'is_recruiter': is_recruiter,
-        'jobs': jobs,
-        'jobseekers': jobseekers,
-        'jobseeker_cards': jobseeker_cards,
-        'applied_job_ids': applied_job_ids,
-        }
     return render(request, 'home.html', context)
 
 

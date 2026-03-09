@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Profile - JobPortal</title>
-</head>
+{% block title %}Profile - Job Portal{% endblock %}
 
-<body>
-
-</body>
-
-</html>
+{% block content %}
+<section class="auth-wrapper">
+    <div class="auth-card auth-card-wide">
+        <h2>Profile Page</h2>
+        <p>This template is not used directly.</p>
+        <div class="auth-footer">
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

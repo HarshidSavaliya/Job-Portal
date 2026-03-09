@@ -53,7 +53,7 @@ def apply_job(request, job_id):
                 application.recruiter = job.recruiter
                 application.save()
                 messages.success(request, 'Application submitted successfully.')
-                return redirect('my_applications')
+                return redirect('home')
     else:
         form = ApplicationForm(
             initial={
