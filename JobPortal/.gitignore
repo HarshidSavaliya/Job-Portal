@@ -12,6 +12,7 @@ __pycache__/
 
 # Django user-uploaded media
 media/
+.test-media/
 profile_pictures/
 company_logos/
 resumes/

@@ -116,9 +116,7 @@
                 </div>
             </div>
         </div>
-        <div class="auth-footer">
-            <p><a href="{% url 'home' %}">Back to Home</a></p>
-        </div>
+      
 
         <div class="quick-section" id="my-job-posts">
             <h3>My Job Posts</h3>
@@ -144,6 +142,9 @@
             {% else %}
             <p>No job posts yet.</p>
             {% endif %}
+        </div>
+          <div class="auth-footer">
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
         </div>
     </section>
 

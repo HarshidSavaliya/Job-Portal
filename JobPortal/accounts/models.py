@@ -34,7 +34,8 @@ class User(models.Model):
     zip_code = models.CharField(max_length=20, blank=True)
 
     def get_full_name(self):
-        return f"{self.first_name} {self.middle_name} {self.last_name}"
+        parts = [self.first_name, self.middle_name, self.last_name]
+        return " ".join(part for part in parts if part).strip()
     
     def __str__(self):
         return f"{self.user.username}'s profile"

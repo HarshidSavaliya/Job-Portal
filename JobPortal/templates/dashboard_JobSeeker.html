@@ -2,15 +2,9 @@
 {% load static %}
 
 {% block content %}
-
 <main class="dashboard">
-
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-
-        <!-- Profile Card -->
         <div class="profile-card">
-
             <div class="profile-top">
                 <div class="profile-avatar">
                     {% if jobseeker_profile.profile_picture %}
@@ -27,7 +21,6 @@
                 </div>
             </div>
 
-            <!-- Stats -->
             <div class="profile-stats">
                 <div>
                     <h2>{{ profile_completion }}%</h2>
@@ -39,64 +32,96 @@
                 </div>
             </div>
 
-            <!-- Progress -->
             <div class="profile-progress">
                 <div class="progress-text">
                     <span>Profile Completion</span>
                     <strong>{{ profile_completion }}%</strong>
                 </div>
-                <div
-                    class="progress-bar"
-                    role="progressbar"
-                    aria-label="Profile completion"
-                    aria-valuenow="{{ profile_completion }}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
+                <div class="progress-bar" role="progressbar" aria-label="Profile completion"
+                    aria-valuenow="{{ profile_completion }}" aria-valuemin="0" aria-valuemax="100"
                     data-progress="{{ profile_completion }}">
                     <div class="progress-fill"></div>
                 </div>
 
                 <a href="{% url 'update_profile' %}" class="btn-complete">Complete Profile</a>
             </div>
-
         </div>
 
-        <!-- Quick Actions -->
         <div class="quick-section">
             <h3>Quick Actions</h3>
             <ul>
                 <li><a href="{% url 'update_profile' %}"><i class="fas fa-user-edit"></i> Update Profile</a></li>
-                <li><a href="{% url 'my_applications' %}"><i class="fas fa-file-upload"></i> Edit Applications</a></li>
-                <li><a href="{% url 'my_applications' %}"><i class="fas fa-bookmark"></i> View Applications</a></li>
-                <li><a href="{% url 'home' %}"><i class="fas fa-bell"></i> Browse Jobs</a></li>
+                <li><a href="{% url 'my_applications' %}"><i class="fas fa-file-lines"></i> Manage Applications</a></li>
+                <li><a href="#recent-applications"><i class="fas fa-clock-rotate-left"></i> Recent Applications</a></li>
+                <li><a href="{% url 'home' %}"><i class="fas fa-briefcase"></i> Browse Jobs</a></li>
             </ul>
         </div>
-
     </aside>
 
-    <!-- MAIN CONTENT -->
     <section class="content">
         <h1>Welcome back, {{ display_name }}!</h1>
 
-        <div class="quick-section">
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ application_count }}</h3>
+                    <span>Total Applications</span>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ jobseeker_profile.resume|yesno:"Ready,Missing" }}</h3>
+                    <span>Resume Status</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-list-check"></i>
+                </div>
+                <div class="card-info">
+                    <h3>{{ recent_applications|length }}</h3>
+                    <span>Recent Applications</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="quick-section" id="recent-applications">
             <h3>Recent Applications</h3>
             {% if recent_applications %}
             <ul>
                 {% for application in recent_applications %}
                 <li>
-                    <a href="{% url 'edit_application' application.id %}">
-                        <i class="fas fa-pen-to-square"></i>
-                        {{ application.job.title }} at {{ application.job.company }}
-                    </a>
+                    <div class="inline-actions">
+                        <a href="{% url 'edit_application' application.id %}">
+                            <i class="fas fa-pen-to-square"></i>
+                            Edit: {{ application.job.title }} at {{ application.job.company }}
+                        </a>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
+            <div class="auth-footer auth-footer-centered">
+                <a href="{% url 'my_applications' %}">View All Applications</a>
+            </div>
             {% else %}
             <p>No applications submitted yet.</p>
             {% endif %}
         </div>
+
+        <div class="auth-footer">
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
+        </div>
     </section>
-
 </main>
-
 {% endblock %}
