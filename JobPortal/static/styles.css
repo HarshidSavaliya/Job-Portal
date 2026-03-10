@@ -470,8 +470,6 @@ body.auth-page::before {
     position: relative;
 }
 
-/* */
-
 .auth-page>* {
     position: relative;
     z-index: 1;
@@ -559,6 +557,98 @@ body.update-page .auth-body input[type="file"].form-control::file-selector-butto
     max-width: 1040px;
 }
 
+.panel-page {
+    padding: clamp(1.5rem, 2vw, 2rem);
+}
+
+.panel-page-form {
+    padding-top: 1.75rem;
+}
+
+.panel-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-bottom: 1.35rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #E7EDF8;
+}
+
+.panel-page-copy {
+    min-width: 0;
+}
+
+.panel-page-eyebrow {
+    margin: 0 0 0.45rem;
+    color: var(--primary-blue);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.panel-page-header h2 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: clamp(2rem, 3vw, 2.45rem);
+    line-height: 1.15;
+}
+
+.panel-page-text {
+    margin: 0.6rem 0 0;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.panel-count {
+    min-width: 170px;
+    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(47, 79, 181, 0.14);
+    background: linear-gradient(180deg, #FBFCFF 0%, #F3F7FF 100%);
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-count span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.panel-count strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--primary-dark);
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.panel-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.panel-form > .form-group,
+.panel-form .form-row .form-group {
+    margin-bottom: 0;
+}
+
+.panel-form .form-row {
+    margin-bottom: 0;
+}
+
+.panel-form .btn-primary {
+    margin-top: 0.35rem;
+}
+
+.panel-page .error-messages {
+    margin: 0 0 1.25rem;
+}
+
 .auth-wrapper .form-group {
     padding: 0;
     margin-bottom: 1rem;
@@ -595,6 +685,41 @@ body.update-page .auth-body input[type="file"].form-control::file-selector-butto
     border-radius: var(--radius-sm);
     padding: 0.5rem 0.65rem;
     font-size: 0.88rem;
+}
+
+.field-help {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.file-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.85rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #DEE7F7;
+    border-radius: var(--radius-md);
+    background: var(--white);
+}
+
+.file-summary p {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.file-summary a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.file-summary a:hover {
+    color: var(--primary-dark);
 }
 
 .btn-primary {
@@ -1004,6 +1129,10 @@ textarea.form-control {
 
 .auth-footer-centered {
     margin-top: 1.25rem;
+}
+
+.auth-footer-centered a {
+    margin-left: 0;
 }
 
 .auth-footer p {
@@ -1720,7 +1849,18 @@ textarea.form-control {
     border-radius: var(--radius-md);
     background: var(--white);
     box-shadow: var(--shadow-sm);
-    padding: 1rem 1.1rem;
+    padding: 1.25rem 1.35rem;
+}
+
+.panel-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.panel-item-copy {
+    min-width: 0;
 }
 
 .panel-item h3 {
@@ -1728,9 +1868,35 @@ textarea.form-control {
     color: var(--text-dark);
 }
 
-.panel-item p {
-    margin: 0.3rem 0;
+.panel-item-subtitle {
+    margin: 0;
     color: var(--text-light);
+    font-size: 1.05rem;
+}
+
+.panel-meta {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1rem;
+}
+
+.panel-meta-row {
+    margin: 0;
+    color: var(--text-light);
+    line-height: 1.55;
+}
+
+.panel-meta-row strong {
+    color: var(--text-dark);
+}
+
+.panel-empty {
+    padding: 2rem 1.25rem;
+    border: 1px dashed rgba(47, 79, 181, 0.22);
+    border-radius: var(--radius-md);
+    background: #F9FBFF;
+    text-align: center;
+    color: var(--text-muted);
 }
 
 .panel-actions {
@@ -1743,11 +1909,13 @@ textarea.form-control {
 
 .panel-actions form {
     margin: 0;
+    display: flex;
 }
 
 .panel-actions .btn-primary {
     width: auto;
-    padding: 0.75rem 1rem;
+    min-width: 132px;
+    padding: 0.8rem 1rem;
 }
 
 .status-badge {
@@ -1805,6 +1973,11 @@ textarea.form-control {
 
 .post-job-delete-form {
     margin-top: 1rem;
+}
+
+.panel-page .auth-footer {
+    margin: 1.75rem 0 0;
+    padding-top: 1.25rem;
 }
 
 .section-title i {
@@ -1931,6 +2104,10 @@ textarea.form-control {
 }
 
 @media (max-width: 768px) {
+    body::before {
+        height: 108px;
+    }
+
     .flash-stack {
         padding: 0 1rem;
     }
@@ -1947,7 +2124,7 @@ textarea.form-control {
 
     .navbar ul {
         position: absolute;
-        top: 80px;
+        top: calc(100% - 1px);
         left: -100%;
         width: 100%;
         background: var(--primary-dark);
@@ -2060,6 +2237,34 @@ textarea.form-control {
         padding: 0 1rem;
     }
 
+    .panel-page {
+        padding: 1.35rem 1rem;
+    }
+
+    .panel-page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .panel-count {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .panel-item-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .panel-actions>*,
+    .panel-actions form {
+        flex: 1 1 100%;
+    }
+
+    .panel-actions .btn-primary {
+        width: 100%;
+    }
+
     .content {
         padding: 1.5rem;
     }
@@ -2109,6 +2314,10 @@ textarea.form-control {
 }
 
 @media (max-width: 480px) {
+    body::before {
+        height: 150px;
+    }
+
     .flash-stack {
         padding: 0 0.85rem;
     }

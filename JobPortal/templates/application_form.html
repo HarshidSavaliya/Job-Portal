@@ -5,60 +5,75 @@
 {% block content %}
 <section class="auth-wrapper">
     <div class="auth-card auth-card-wide">
-        <h2>{{ page_title|default:"Application" }}</h2>
-        <p>{{ job.company }} - {{ job.location }}</p>
-
-        <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-
-            {% if form.non_field_errors %}
-            <div class="error-message">
-                {{ form.non_field_errors|join:", " }}
-            </div>
-            {% endif %}
-
-            <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">Full Name</label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                <div class="error-message">{{ form.name.errors|join:", " }}</div>
-                {% endif %}
+        <div class="panel-page panel-page-form">
+            <div class="panel-page-header">
+                <div class="panel-page-copy">
+                    <p class="panel-page-eyebrow">Job Application</p>
+                    <h2>{{ page_title|default:"Application" }}</h2>
+                    <p class="panel-page-text">{{ job.company }} - {{ job.location }}</p>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.email.id_for_label }}">Email</label>
-                {{ form.email }}
-                {% if form.email.errors %}
-                <div class="error-message">{{ form.email.errors|join:", " }}</div>
-                {% endif %}
-            </div>
+            <form method="post" enctype="multipart/form-data" novalidate class="panel-form">
+                {% csrf_token %}
 
-            <div class="form-group">
-                <label for="{{ form.resume.id_for_label }}">Resume (PDF only)</label>
-                {{ form.resume }}
-                {% if application and application.resume %}
-                <div class="auth-footer">
-                    <p>Current resume: <a href="{{ application.resume.url }}" target="_blank" rel="noopener">View uploaded file</a></p>
+                {% if form.non_field_errors %}
+                <div class="error-message">
+                    {{ form.non_field_errors|join:", " }}
                 </div>
                 {% endif %}
-                {% if form.resume.errors %}
-                <div class="error-message">{{ form.resume.errors|join:", " }}</div>
-                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Full Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.resume.id_for_label }}">Resume (PDF only)</label>
+                    {% if application and application.resume %}
+                    <div class="file-summary">
+                        <p>Current resume is already attached.</p>
+                        <a href="{{ application.resume.url }}" target="_blank" rel="noopener">View uploaded file</a>
+                    </div>
+                    {% endif %}
+                    {{ form.resume }}
+                    <p class="field-help">
+                        {% if application and application.resume %}
+                        Upload a new PDF only if you want to replace the current resume.
+                        {% else %}
+                        Upload your resume as a PDF file.
+                        {% endif %}
+                    </p>
+                    {% if form.resume.errors %}
+                    <div class="error-message">{{ form.resume.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.experience.id_for_label }}">Experience</label>
+                    {{ form.experience }}
+                    {% if form.experience.errors %}
+                    <div class="error-message">{{ form.experience.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn-primary">{{ submit_label|default:"Submit Application" }}</button>
+            </form>
+
+            <div class="auth-footer auth-footer-centered">
+                <p><a href="{% url 'my_applications' %}">Back to Applications</a></p>
             </div>
-
-            <div class="form-group">
-                <label for="{{ form.experience.id_for_label }}">Experience</label>
-                {{ form.experience }}
-                {% if form.experience.errors %}
-                <div class="error-message">{{ form.experience.errors|join:", " }}</div>
-                {% endif %}
-            </div>
-
-            <button type="submit" class="btn-primary">{{ submit_label|default:"Submit Application" }}</button>
-        </form>
-
-        <div class="auth-footer">
-            <p><a href="{% url 'my_applications' %}">Back to Applications</a></p>
         </div>
     </div>
 </section>

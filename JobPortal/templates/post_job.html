@@ -13,8 +13,8 @@
             <p>Add the job details clearly so applicants can understand the role.</p>
         </div>
 
-        <div class="auth-body">
-            <form method="POST" novalidate>
+        <div class="panel-page panel-page-form">
+            <form method="POST" novalidate class="panel-form">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}

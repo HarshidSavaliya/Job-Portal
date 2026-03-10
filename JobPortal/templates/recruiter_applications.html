@@ -5,53 +5,75 @@
 {% block content %}
 <section class="auth-wrapper">
     <div class="auth-card auth-card-xl">
-        <h2>Received Applications</h2>
-        <p class="panel-summary">Total applications: {{ application_count }}</p>
-
-        {% if applications %}
-        <div class="panel-list">
-            {% for application in applications %}
-            <article class="panel-item">
-                <h3>{{ application.job.title }}</h3>
-                <p>
-                    <strong>Status:</strong>
-                    <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
-                </p>
-                <p><strong>Applicant:</strong>
-                    {% if application.applicant %}
-                    {{ application.applicant.user.username }}
-                    {% else %}
-                    {{ application.name }}
-                    {% endif %}
-                </p>
-                <p><strong>Email:</strong> {{ application.email }}</p>
-                <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
-                <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
-                <div class="panel-actions">
-                    {% if application.resume %}
-                    <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
-                    {% endif %}
-                    {% if application.applicant %}
-                    <a class="btn-primary btn-secondary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
-                    {% endif %}
-                    <form method="post" action="{% url 'update_application_status' application.id 'accepted' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-primary">Accept</button>
-                    </form>
-                    <form method="post" action="{% url 'update_application_status' application.id 'rejected' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-primary btn-danger">Reject</button>
-                    </form>
+        <div class="panel-page">
+            <div class="panel-page-header">
+                <div class="panel-page-copy">
+                    <p class="panel-page-eyebrow">Recruiter Dashboard</p>
+                    <h2>Received Applications</h2>
+                    <p class="panel-page-text">
+                        Review applicants, open their resumes, and update each application status.
+                    </p>
                 </div>
-            </article>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No applications received yet.</p>
-        {% endif %}
+                <div class="panel-count">
+                    <span>Total applications</span>
+                    <strong>{{ application_count }}</strong>
+                </div>
+            </div>
 
-        <div class="auth-footer">
-            <p><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+            {% if applications %}
+            <div class="panel-list">
+                {% for application in applications %}
+                <article class="panel-item">
+                    <div class="panel-item-head">
+                        <div class="panel-item-copy">
+                            <h3>{{ application.job.title }}</h3>
+                            <p class="panel-item-subtitle">{{ application.job.company }} - {{ application.job.location }}</p>
+                        </div>
+                        <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
+                    </div>
+                    <div class="panel-meta">
+                        <p class="panel-meta-row">
+                            <strong>Applicant:</strong>
+                            <span>
+                                {% if application.applicant %}
+                                {{ application.applicant.user.username }}
+                                {% else %}
+                                {{ application.name }}
+                                {% endif %}
+                            </span>
+                        </p>
+                        <p class="panel-meta-row"><strong>Email:</strong> <span>{{ application.email }}</span></p>
+                        <p class="panel-meta-row"><strong>Applied:</strong> <span>{{ application.applied_at|date:"M d, Y H:i" }}</span></p>
+                        <p class="panel-meta-row"><strong>Experience:</strong> <span>{{ application.experience|default:"Not provided" }}</span></p>
+                    </div>
+                    <div class="panel-actions">
+                        {% if application.resume %}
+                        <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
+                        {% endif %}
+                        {% if application.applicant %}
+                        <a class="btn-primary btn-secondary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
+                        {% endif %}
+                        <form method="post" action="{% url 'update_application_status' application.id 'accepted' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-primary">Accept</button>
+                        </form>
+                        <form method="post" action="{% url 'update_application_status' application.id 'rejected' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-primary btn-danger">Reject</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="panel-empty">
+                <p>No applications received yet.</p>
+            </div>
+            {% endif %}
+
+            <div class="auth-footer auth-footer-centered">
+                <p><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+            </div>
         </div>
     </div>
 </section>

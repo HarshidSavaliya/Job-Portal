@@ -5,40 +5,58 @@
 {% block content %}
 <section class="auth-wrapper">
     <div class="auth-card auth-card-xl">
-        <h2>My Applications</h2>
-        <p class="panel-summary">Total applications: {{ application_count }}</p>
-
-        {% if applications %}
-        <div class="panel-list">
-            {% for application in applications %}
-            <article class="panel-item">
-                <h3>{{ application.job.title }}</h3>
-                <p>{{ application.job.company }} - {{ application.job.location }}</p>
-                <p>
-                    <strong>Status:</strong>
-                    <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
-                </p>
-                <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
-                <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
-                <div class="panel-actions">
-                    <a class="btn-primary btn-secondary" href="{% url 'edit_application' application.id %}">Edit</a>
-                    {% if application.resume %}
-                    <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
-                    {% endif %}
-                    <form method="post" action="{% url 'delete_application' application.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-primary btn-danger">Delete</button>
-                    </form>
+        <div class="panel-page">
+            <div class="panel-page-header">
+                <div class="panel-page-copy">
+                    <p class="panel-page-eyebrow">Jobseeker Dashboard</p>
+                    <h2>My Applications</h2>
+                    <p class="panel-page-text">
+                        Review your submitted jobs, resume links, and the latest recruiter decisions.
+                    </p>
                 </div>
-            </article>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>You have not applied for any jobs yet.</p>
-        {% endif %}
+                <div class="panel-count">
+                    <span>Total applications</span>
+                    <strong>{{ application_count }}</strong>
+                </div>
+            </div>
 
-        <div class="auth-footer">
-            <p><a href="{% url 'home' %}">Browse Jobs</a></p>
+            {% if applications %}
+            <div class="panel-list">
+                {% for application in applications %}
+                <article class="panel-item">
+                    <div class="panel-item-head">
+                        <div class="panel-item-copy">
+                            <h3>{{ application.job.title }}</h3>
+                            <p class="panel-item-subtitle">{{ application.job.company }} - {{ application.job.location }}</p>
+                        </div>
+                        <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
+                    </div>
+                    <div class="panel-meta">
+                        <p class="panel-meta-row"><strong>Applied:</strong> <span>{{ application.applied_at|date:"M d, Y H:i" }}</span></p>
+                        <p class="panel-meta-row"><strong>Experience:</strong> <span>{{ application.experience|default:"Not provided" }}</span></p>
+                    </div>
+                    <div class="panel-actions">
+                        <a class="btn-primary btn-secondary" href="{% url 'edit_application' application.id %}">Edit</a>
+                        {% if application.resume %}
+                        <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
+                        {% endif %}
+                        <form method="post" action="{% url 'delete_application' application.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-primary btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="panel-empty">
+                <p>You have not applied for any jobs yet.</p>
+            </div>
+            {% endif %}
+
+            <div class="auth-footer auth-footer-centered">
+                <p><a href="{% url 'home' %}">Browse Jobs</a></p>
+            </div>
         </div>
     </div>
 </section>

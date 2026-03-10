@@ -31,7 +31,7 @@ class ApplicationForm(forms.ModelForm):
 
     resume = forms.FileField(
         required=False,
-        widget=forms.ClearableFileInput(
+        widget=forms.FileInput(
             attrs={
                 'class': 'form-control-file',
                 'accept': '.pdf,application/pdf',
