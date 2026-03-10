@@ -13,6 +13,10 @@
             {% for application in applications %}
             <article class="panel-item">
                 <h3>{{ application.job.title }}</h3>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
+                </p>
                 <p><strong>Applicant:</strong>
                     {% if application.applicant %}
                     {{ application.applicant.user.username }}
@@ -30,6 +34,14 @@
                     {% if application.applicant %}
                     <a class="btn-primary btn-secondary" href="{% url 'view_jobseeker_profile' application.applicant.id %}">View Profile</a>
                     {% endif %}
+                    <form method="post" action="{% url 'update_application_status' application.id 'accepted' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'update_application_status' application.id 'rejected' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary btn-danger">Reject</button>
+                    </form>
                 </div>
             </article>
             {% endfor %}

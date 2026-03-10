@@ -2,10 +2,20 @@ from django.db import models
 
 
 class Application(models.Model):
+    STATUS_PENDING = 'pending'
+    STATUS_ACCEPTED = 'accepted'
+    STATUS_REJECTED = 'rejected'
+    STATUS_CHOICES = (
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_ACCEPTED, 'Accepted'),
+        (STATUS_REJECTED, 'Rejected'),
+    )
+
     name = models.CharField(max_length=100)
     email = models.EmailField()
     resume = models.FileField(upload_to='resumes/')
     experience = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
     applicant = models.ForeignKey(
         'accounts.User',
         on_delete=models.CASCADE,

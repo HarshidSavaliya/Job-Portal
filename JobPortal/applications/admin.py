@@ -5,8 +5,8 @@ from .models import Application
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'applicant', 'job', 'recruiter', 'applied_at', 'has_resume')
-    list_filter = ('applied_at', 'job__job_category')
+    list_display = ('name', 'email', 'status', 'applicant', 'job', 'recruiter', 'applied_at', 'has_resume')
+    list_filter = ('status', 'applied_at', 'job__job_category')
     search_fields = (
         'name',
         'email',

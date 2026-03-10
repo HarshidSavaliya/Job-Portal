@@ -14,12 +14,16 @@
             <article class="panel-item">
                 <h3>{{ application.job.title }}</h3>
                 <p>{{ application.job.company }} - {{ application.job.location }}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status-badge status-{{ application.status }}">{{ application.get_status_display }}</span>
+                </p>
                 <p><strong>Applied:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
                 <p><strong>Experience:</strong> {{ application.experience|default:"Not provided" }}</p>
                 <div class="panel-actions">
                     <a class="btn-primary btn-secondary" href="{% url 'edit_application' application.id %}">Edit</a>
                     {% if application.resume %}
-                    <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank">View Resume</a>
+                    <a class="btn-primary btn-secondary" href="{{ application.resume.url }}" target="_blank" rel="noopener">View Resume</a>
                     {% endif %}
                     <form method="post" action="{% url 'delete_application' application.id %}">
                         {% csrf_token %}

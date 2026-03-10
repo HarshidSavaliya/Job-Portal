@@ -21,6 +21,20 @@ def _get_jobseeker_applications(profile):
     ).distinct()
 
 
+def _get_recruiter_profile(request):
+    profile = getattr(request.user, 'profile', None)
+    if profile is None:
+        messages.error(request, 'Profile record does not exist for this account.')
+        return None, redirect('home')
+
+    if profile.role != 'recruiter':
+        messages.error(request, 'Only recruiters can manage applications.')
+        return None, redirect('home')
+
+    recruiter_profile = get_object_or_404(RecruiterProfile, user_profile=profile)
+    return recruiter_profile, None
+
+
 @login_required(login_url='login')
 def apply_job(request, job_id):
     profile = getattr(request.user, 'profile', None)
@@ -155,16 +169,10 @@ def delete_application(request, application_id):
 
 @login_required(login_url='login')
 def recruiter_applications(request):
-    profile = getattr(request.user, 'profile', None)
-    if profile is None:
-        messages.error(request, 'Profile record does not exist for this account.')
-        return redirect('home')
+    recruiter_profile, error_response = _get_recruiter_profile(request)
+    if error_response:
+        return error_response
 
-    if profile.role != 'recruiter':
-        messages.error(request, 'Only recruiters can view received applications.')
-        return redirect('home')
-
-    recruiter_profile = get_object_or_404(RecruiterProfile, user_profile=profile)
     applications = Application.objects.select_related(
         'job',
         'applicant__user',
@@ -178,4 +186,35 @@ def recruiter_applications(request):
             'application_count': applications.count(),
         },
     )
+
+
+@login_required(login_url='login')
+def update_application_status(request, application_id, status):
+    recruiter_profile, error_response = _get_recruiter_profile(request)
+    if error_response:
+        return error_response
+
+    if request.method != 'POST':
+        return redirect('recruiter_applications')
+
+    if status not in {
+        Application.STATUS_ACCEPTED,
+        Application.STATUS_REJECTED,
+    }:
+        messages.error(request, 'Invalid application status.')
+        return redirect('recruiter_applications')
+
+    application = get_object_or_404(
+        Application,
+        pk=application_id,
+        recruiter=recruiter_profile,
+    )
+    application.status = status
+    application.save(update_fields=['status'])
+
+    messages.success(
+        request,
+        f'Application for "{application.job.title}" marked as {application.get_status_display().lower()}.',
+    )
+    return redirect('recruiter_applications')
 
